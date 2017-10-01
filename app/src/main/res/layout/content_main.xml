@@ -8,4 +8,11 @@
     tools:context="com.csc_331_jagwares.bluetoothattendee.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <!-- This is the container Frame Layout for all of the fragments-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainLayout">
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>
