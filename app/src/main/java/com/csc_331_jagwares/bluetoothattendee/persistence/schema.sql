@@ -1,14 +1,16 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE tblClass (
-    className VARCHAR(50) PRIMARY KEY,
-)
+    className TEXT PRIMARY KEY
+);
 
 CREATE TABLE tblStudent (
-    jagNumber VARCHAR(9) PRIMARY KEY,
-    firstName VARCHAR(50),
-    lastName VARCHAR(50),
-)
+    jagNumber TEXT PRIMARY KEY,
+    firstName TEXT,
+    lastName TEXT
+);
 
 CREATE TABLE tblEnrollment (
-    className VARCHAR(50) REFERENCES tblClass(className),
-    className VARCHAR(50) REFERENCES tblStudent(jagNumber),
-)
+    className TEXT REFERENCES tblClass(className),
+    jagNumber TEXT REFERENCES tblStudent(jagNumber)
+);
