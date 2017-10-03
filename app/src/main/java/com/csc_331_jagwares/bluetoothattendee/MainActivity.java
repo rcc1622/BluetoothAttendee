@@ -1,6 +1,7 @@
 package com.csc_331_jagwares.bluetoothattendee;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -32,11 +33,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Checks first item in the navigation drawer initially.
-        navigationView.setCheckedItem(R.id.nav_class_list);
+        navigationView.setCheckedItem(R.id.nav_classes);
 
-        // Open ClassListFragment initially.
+        // Open ClassesFragment initially.
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainLayout, new ClassListFragment());
+        ft.replace(R.id.mainLayout, new ClassesFragment());
         ft.commit();
     }
 
@@ -74,16 +75,22 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         Fragment fragment = null;
 
-        if (id == R.id.nav_class_list) {
-            fragment = new ClassListFragment();
+        if (id == R.id.nav_classes) {
+            fragment = new ClassesFragment();
+        }
+        else if (id == R.id.nav_reports){
+            fragment = new ReportsFragment();
         }
 
+        else if (id == R.id.nav_settings){
+            fragment = new SettingsFragment();
+        }
         // Switch to selected fragment.
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
