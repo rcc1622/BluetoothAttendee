@@ -14,11 +14,11 @@ public class ClassEntry {
         this.location = location;
     }
 
-    String GetName(){
+    String getName(){
         return this.name;
     }
 
-    String GetLocation(){
+    String getLocation(){
         return this.location;
     }
 }
