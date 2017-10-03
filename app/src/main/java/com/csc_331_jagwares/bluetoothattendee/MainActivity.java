@@ -33,11 +33,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Checks first item in the navigation drawer initially.
-        navigationView.setCheckedItem(R.id.nav_class_list);
+        navigationView.setCheckedItem(R.id.nav_classes);
 
-        // Open ClassFragment initially.
+        // Open ClassesFragment initially.
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainLayout, new ClassFragment());
+        ft.replace(R.id.mainLayout, new ClassesFragment());
         ft.commit();
     }
 
@@ -81,10 +81,16 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = null;
 
-        if (id == R.id.nav_class_list) {
-            fragment = new ClassFragment();
+        if (id == R.id.nav_classes) {
+            fragment = new ClassesFragment();
+        }
+        else if (id == R.id.nav_reports){
+            fragment = new ReportsFragment();
         }
 
+        else if (id == R.id.nav_settings){
+            fragment = new SettingsFragment();
+        }
         // Switch to selected fragment.
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
