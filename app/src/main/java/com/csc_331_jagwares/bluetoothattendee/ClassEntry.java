@@ -6,11 +6,19 @@ package com.csc_331_jagwares.bluetoothattendee;
 
 public class ClassEntry {
 
-    public String name;
-    public String location;
+    private String name;
+    private String location;
 
     public ClassEntry(String name, String location){
         this.name = name;
         this.location = location;
+    }
+
+    String GetName(){
+        return this.name;
+    }
+
+    String GetLocation(){
+        return this.location;
     }
 }
