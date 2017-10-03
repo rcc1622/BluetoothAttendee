@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class ClassesFragment extends Fragment {
 
-    ArrayList<String> classes;
+    ArrayList<ClassEntry> classEntries;
 
     public ClassesFragment() {
         // Required empty public constructor
@@ -34,12 +34,20 @@ public class ClassesFragment extends Fragment {
 
         // Populate list view with classes.\
         // This array would come from the db.
-        classes = new ArrayList<>();
-        classes.add("CSC 311");
-        classes.add("CSC 322");
-        classes.add("CSC 331");
-        classes.add("EH 215");
-        populateListView(view, classes);
+        classEntries = new ArrayList<>();
+        ClassEntry class1 = new ClassEntry("CSC 331", "SHEC 1000");
+        ClassEntry class2 = new ClassEntry("CSC 322", "SHEC 1001");
+        ClassEntry class3 = new ClassEntry("CSC 311", "SHEC 1002");
+        ClassEntry class4 = new ClassEntry("CSC 320", "SHEC 1003");
+        ClassEntry class5 = new ClassEntry("CSC 120", "SHEC 1004");
+
+        classEntries.add(class1);
+        classEntries.add(class2);
+        classEntries.add(class3);
+        classEntries.add(class4);
+        classEntries.add(class5);
+
+        populateListView(view, classEntries);
 
         registerClickCallback(view);
 
@@ -47,16 +55,14 @@ public class ClassesFragment extends Fragment {
 
     }
 
-    private void populateListView(View view, ArrayList<String> classes) {
+    private void populateListView(View view, ArrayList<ClassEntry> classes) {
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getContext(),
-                R.layout.class_entry,
-                classes
-        );
-
+        // Create the adapter to convert the array to views
+        ClassEntryAdapter adapter = new ClassEntryAdapter(getContext(), classes);
+        // Attach the adapter to a ListView
         ListView lvClassList = view.findViewById(R.id.lvClassList);
         lvClassList.setAdapter(adapter);
+
     }
 
     private void registerClickCallback(View view) {
@@ -65,7 +71,7 @@ public class ClassesFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedData = classes.get(position);
+                String selectedData = classEntries.get(position).getName();
                 Toast.makeText(getActivity().getBaseContext(), selectedData, Toast.LENGTH_LONG).show();
             }
         });
