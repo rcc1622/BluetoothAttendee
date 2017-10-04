@@ -1,13 +1,55 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context="com.csc_331_jagwares.bluetoothattendee.ClassFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:stretchColumns="1">
+        <TableRow>
+            <TextView
+                android:text="Hello"
+                android:padding="3dip" />
+            <TextView
+                android:text="Hello 2"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
 
-</FrameLayout>
+        <TableRow>
+            <TextView
+                android:text="Hello 3"
+                android:padding="3dip" />
+            <TextView
+                android:text="Hello 4"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Class Roster" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Take Attendance" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register Students" />
+
+    </LinearLayout>
+
+</LinearLayout>
