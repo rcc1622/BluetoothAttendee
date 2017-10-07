@@ -11,10 +11,32 @@
         android:stretchColumns="1">
         <TableRow>
             <TextView
+                android:id="@+id/tvClassName"
                 android:text="Hello"
                 android:padding="3dip" />
             <TextView
+                android:id="@+id/tvClassLocation"
                 android:text="Hello 2"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="Hello 3"
+                android:padding="3dip" />
+            <TextView
+                android:text="Hello 4"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="Hello 3"
+                android:padding="3dip" />
+            <TextView
+                android:text="Hello 4"
                 android:gravity="right"
                 android:padding="3dip" />
         </TableRow>
@@ -36,16 +58,22 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/rosterBtn"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View Class Roster" />
 
         <Button
+            android:id="@+id/attendanceBtn"
+            android:onClick="onClickBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Take Attendance" />
 
         <Button
+            android:id="@+id/registerBtn"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Register Students" />

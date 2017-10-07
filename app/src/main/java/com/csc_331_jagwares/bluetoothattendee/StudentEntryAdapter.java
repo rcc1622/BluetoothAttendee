@@ -1,6 +1,5 @@
 package com.csc_331_jagwares.bluetoothattendee;
 
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -11,15 +10,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by alex on 10/6/17.
+ */
 
-public class ClassEntryAdapter extends ArrayAdapter {
+public class StudentEntryAdapter extends ArrayAdapter {
 
     // Holds the list of classes from the database to be added to the ListView.
-    private ArrayList<ClassEntry> classEntries;
+    private ArrayList<StudentEntry> studentEntries;
 
-    public ClassEntryAdapter(Context context, ArrayList<ClassEntry> studentEntries) {
+    public StudentEntryAdapter(Context context, ArrayList<StudentEntry> studentEntries) {
         super(context, 0, studentEntries);
-        this.classEntries = classEntries;
+        this.studentEntries = studentEntries;
     }
 
     @NonNull
@@ -27,16 +29,16 @@ public class ClassEntryAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.class_entry, null);
+        View view = inflater.inflate(R.layout.student_entry, null);
 
         // Set object values to the ListView layout elements.
-        ClassEntry classEntry = (ClassEntry) getItem(position);
-        TextView tvClassName = view.findViewById(R.id.tvClassName);
-        TextView tvClassLocation = view.findViewById(R.id.tvClassLocation);
+        StudentEntry studentEntry = (StudentEntry) getItem(position);
+        TextView tvStudentName = view.findViewById(R.id.tvStudentName);
+        TextView tvStudentId = view.findViewById(R.id.tvStudentId);
 
-        if (classEntry != null) {
-            tvClassName.setText(classEntry.getName());
-            tvClassLocation.setText(classEntry.getLocation());
+        if (studentEntry != null) {
+            tvStudentName.setText(studentEntry.getName());
+            tvStudentId.setText(studentEntry.getId());
         }
 
         return view;
