@@ -2,19 +2,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvClassName"
-        android:text="Class: ">
-    </TextView>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="0">
+        <TableRow>
+            <TextView
+                android:id="@+id/tvClassName"
+                android:text=""
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="left" />
+        </TableRow>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvClassLocation"
-        android:text="Location: ">
+        <TableRow>
+            <TextView
+                android:id="@+id/tvClassTitle"
+                android:text=""
+                android:layout_weight="0"
+                android:gravity="left" />
+            <TextView
+                android:id="@+id/tvClassDays"
+                android:text=""
+                android:layout_weight="1"
+                android:gravity="right" />
+        </TableRow>
 
-    </TextView>
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tvClassLocation"
+                android:text=""
+                android:layout_weight="0"
+                android:gravity="left" />
+            <TextView
+                android:id="@+id/tvClassTime"
+                android:text=""
+                android:layout_weight="1"
+                android:gravity="right" />
+        </TableRow>
+
+    </TableLayout>
 
 </LinearLayout>

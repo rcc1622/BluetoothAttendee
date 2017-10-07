@@ -19,7 +19,6 @@ public class ClassEntryAdapter extends ArrayAdapter {
 
     public ClassEntryAdapter(Context context, ArrayList<ClassEntry> studentEntries) {
         super(context, 0, studentEntries);
-        this.classEntries = classEntries;
     }
 
     @NonNull
@@ -32,11 +31,17 @@ public class ClassEntryAdapter extends ArrayAdapter {
         // Set object values to the ListView layout elements.
         ClassEntry classEntry = (ClassEntry) getItem(position);
         TextView tvClassName = view.findViewById(R.id.tvClassName);
+        TextView tvClassTitle = view.findViewById(R.id.tvClassTitle);
         TextView tvClassLocation = view.findViewById(R.id.tvClassLocation);
+        TextView tvClassDays = view.findViewById(R.id.tvClassDays);
+        TextView tvClassTime = view.findViewById(R.id.tvClassTime);
 
         if (classEntry != null) {
             tvClassName.setText(classEntry.getName());
+            tvClassTitle.setText(classEntry.getTitle());
             tvClassLocation.setText(classEntry.getLocation());
+            tvClassDays.setText(classEntry.getDays());
+            tvClassTime.setText(classEntry.getTime());
         }
 
         return view;
