@@ -35,10 +35,17 @@ public class StudentEntryAdapter extends ArrayAdapter {
         StudentEntry studentEntry = (StudentEntry) getItem(position);
         TextView tvStudentName = view.findViewById(R.id.tvStudentName);
         TextView tvStudentId = view.findViewById(R.id.tvStudentId);
+        TextView tvStudentDeviceRegistered = view.findViewById(R.id.tvStudentDeviceRegistered);
 
         if (studentEntry != null) {
             tvStudentName.setText(studentEntry.getName());
             tvStudentId.setText(studentEntry.getId());
+
+            if (studentEntry.getDeviceRegisteredDate() != null) {
+                tvStudentDeviceRegistered.setText("Device registered on "
+                                                    + studentEntry.getDeviceRegisteredDate()
+                                                    + ".");
+            }
         }
 
         return view;

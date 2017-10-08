@@ -37,13 +37,13 @@ public class ClassesFragment extends Fragment {
         // Populate list view with classes.
         // This array would come from the database.
         classEntries = new ArrayList<>();
-        ClassEntry class1 = new ClassEntry("CSC 331", "Software Engineering", "SHEC 1000", "MWF", "3:00PM - 4:00PM");
-        ClassEntry class2 = new ClassEntry("CSC 322", "Operating Systems", "SHEC 1001", "TR", "1:00AM - 2:30AM");
-        ClassEntry class3 = new ClassEntry("CSC 311", "Networking and Communications", "SHEC 1002", "T", "5:00PM - 6:00PM");
-        ClassEntry class4 = new ClassEntry("CSC 320", "Computer Organization and Architecture", "SHEC 1003", "MWF", "12:00PM - 1:00PM");
-        ClassEntry class5 = new ClassEntry("CSC 120", "Intro to Programming", "SHEC 1004", "MW", "7:00PM - 8:15PM");
-        ClassEntry class6 = new ClassEntry("CSC 108", "Intro to CS", "SHEC 1004", "MWF", "3:00PM - 4:00PM");
-        ClassEntry class7 = new ClassEntry("CSC 400", "Something Cool", "SHEC 1004", "TR", "3:15PM - 4:30PM");
+        ClassEntry class1 = new ClassEntry("CSC 331", "Software Engineering", "101", "SHEC 1000", "MWF", "3:00PM - 4:00PM");
+        ClassEntry class2 = new ClassEntry("CSC 322", "Operating Systems", "102", "SHEC 1001", "TR", "1:00AM - 2:30AM");
+        ClassEntry class3 = new ClassEntry("CSC 311", "Networking and Communications", "104", "SHEC 1002", "T", "5:00PM - 6:00PM");
+        ClassEntry class4 = new ClassEntry("CSC 320", "Computer Organization and Architecture", "102", "SHEC 1003", "MWF", "12:00PM - 1:00PM");
+        ClassEntry class5 = new ClassEntry("CSC 120", "Intro to Programming", "202", "SHEC 1004", "MW", "7:00PM - 8:15PM");
+        ClassEntry class6 = new ClassEntry("CSC 108", "Intro to CS", "101", "SHEC 1004", "MWF", "3:00PM - 4:00PM");
+        ClassEntry class7 = new ClassEntry("CSC 400", "Something Cool", "104", "SHEC 1004", "TR", "3:15PM - 4:30PM");
 
         classEntries.add(class1);
         classEntries.add(class2);

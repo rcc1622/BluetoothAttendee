@@ -13,10 +13,12 @@ public class StudentEntry implements Parcelable {
 
     private String name;
     private String id;
+    private String deviceRegisteredDate;
 
     public StudentEntry(String name, String id){
         this.name = name;
         this.id = id;
+        this.deviceRegisteredDate = null;
     }
 
     void setName(String name) {
@@ -27,6 +29,10 @@ public class StudentEntry implements Parcelable {
         this.id = id;
     }
 
+    void setDeviceRegisteredDate(String deviceRegisteredDate) {
+        this.deviceRegisteredDate = deviceRegisteredDate;
+    }
+
     String getName(){
         return this.name;
     }
@@ -35,15 +41,21 @@ public class StudentEntry implements Parcelable {
         return this.id;
     }
 
+    String getDeviceRegisteredDate() {
+        return this.deviceRegisteredDate;
+    }
+
     protected StudentEntry(Parcel in) {
         name = in.readString();
         id = in.readString();
+        deviceRegisteredDate = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(id);
+        dest.writeString(deviceRegisteredDate);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -44,11 +45,34 @@ public class RegistrationFragment extends Fragment {
         StudentEntry student4 = new StudentEntry("Kaitlyn Gaiger", "J00333333");
         StudentEntry student5 = new StudentEntry("Fernando Lorenzo", "J00444444");
 
+        student3.setDeviceRegisteredDate("09/17/17");
+        student5.setDeviceRegisteredDate("10/03/17");
+
         studentEntries.add(student1);
         studentEntries.add(student2);
         studentEntries.add(student3);
         studentEntries.add(student4);
         studentEntries.add(student5);
+
+        final Button registerDevicesBtn = (Button) view.findViewById(R.id.registerDevicesBtn);
+
+
+        registerDevicesBtn.setOnClickListener(new View.OnClickListener()
+        {
+            boolean clicked = false;
+
+            @Override
+            public void onClick(View v)
+            {
+                if (clicked) {
+                    registerDevicesBtn.setText("Register Devices");
+                    clicked = false;
+                } else {
+                    registerDevicesBtn.setText("Stop Registering Devices");
+                    clicked = true;
+                }
+            }
+        });
 
         // Add the studentes from the ArrayList to the ListView.
         populateListView(view, studentEntries);

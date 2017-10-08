@@ -9,13 +9,15 @@ public class ClassEntry implements Parcelable {
 
     private String name;
     private String title;
+    private String section;
     private String location;
     private String days;
     private String time;
 
-    public ClassEntry(String name, String title, String location, String days, String time){
+    public ClassEntry(String name, String title, String section, String location, String days, String time){
         this.name = name;
         this.title = title;
+        this.section = section;
         this.location = location;
         this.days = days;
         this.time = time;
@@ -27,6 +29,10 @@ public class ClassEntry implements Parcelable {
 
     void setTitle(String title) {
         this.title = title;
+    }
+
+    void setSection(String section) {
+        this.section = section;
     }
 
     void setLocation(String location) {
@@ -49,6 +55,10 @@ public class ClassEntry implements Parcelable {
         return this.title;
     }
 
+    String getSection(){
+        return this.section;
+    }
+
     String getLocation(){
         return this.location;
     }
@@ -64,6 +74,7 @@ public class ClassEntry implements Parcelable {
     protected ClassEntry(Parcel in) {
         name = in.readString();
         title = in.readString();
+        section = in.readString();
         location = in.readString();
         days = in.readString();
         time = in.readString();
@@ -73,6 +84,7 @@ public class ClassEntry implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(title);
+        dest.writeString(section);
         dest.writeString(location);
         dest.writeString(days);
         dest.writeString(time);
