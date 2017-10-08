@@ -37,10 +37,10 @@ public class ClassEntryAdapter extends ArrayAdapter {
         TextView tvClassTime = view.findViewById(R.id.tvClassTime);
 
         if (classEntry != null) {
-            tvClassName.setText(classEntry.getName());
+            tvClassName.setText(classEntry.getName() + "-" + classEntry.getSection());
             tvClassTitle.setText(classEntry.getTitle());
             tvClassLocation.setText(classEntry.getLocation());
-            tvClassDays.setText(classEntry.getDays());
+            tvClassDays.setText("Days: " + classEntry.getDays());
             tvClassTime.setText(classEntry.getTime());
         }
 
