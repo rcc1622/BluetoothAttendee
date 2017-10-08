@@ -42,10 +42,24 @@ public class ClassFragment extends Fragment implements View.OnClickListener {
 
         TextView tvClassName = view.findViewById(R.id.tvClassName);
         TextView tvClassLocation = view.findViewById(R.id.tvClassLocation);
+        TextView tvClassTitle = view.findViewById(R.id.tvClassTitle);
+        TextView tvClassDays = view.findViewById(R.id.tvClassDays);
+        TextView tvClassTime= view.findViewById(R.id.tvClassTime);
+        TextView tvClassProfName= view.findViewById(R.id.tvClassProfName);
+        TextView tvClassCRN= view.findViewById(R.id.tvClassCRN);
+        TextView tvClassSemester= view.findViewById(R.id.tvClassSemester);
+        TextView tvClassNumStudents = view.findViewById(R.id.tvClassNumStudents);
 
         if (classEntry != null) {
-            tvClassName.setText(classEntry.getName());
+            tvClassName.setText(classEntry.getName()+ "-" + classEntry.getSection());
             tvClassLocation.setText(classEntry.getLocation());
+            tvClassTime.setText (classEntry.getTime());
+            tvClassDays.setText ("Days: " + classEntry.getDays());
+            tvClassTitle.setText (classEntry.getTitle());
+            tvClassProfName.setText ("Instructor: " + "Dr. Ryan Benton");
+            tvClassCRN.setText ("CRN: ");
+            tvClassSemester.setText ("Fall 2017 ");
+            tvClassNumStudents.setText ("Registered: " + "35");
         }
 
         // Buttons.
