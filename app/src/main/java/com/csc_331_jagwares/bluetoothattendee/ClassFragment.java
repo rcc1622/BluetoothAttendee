@@ -58,7 +58,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener {
             tvClassTitle.setText (classEntry.getTitle());
             tvClassProfName.setText ("Instructor: " + "Dr. Ryan Benton");
             tvClassCRN.setText ("CRN: ");
-            tvClassSemester.setText ("Fall 2017 ");
+            tvClassSemester.setText ("Fall 2017");
             tvClassNumStudents.setText ("Registered: " + "35");
         }
 

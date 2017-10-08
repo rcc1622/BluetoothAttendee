@@ -1,7 +1,12 @@
 package com.csc_331_jagwares.bluetoothattendee;
 
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -10,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -22,6 +30,11 @@ public class RegistrationFragment extends Fragment {
 
     // Holds all students from database.
     private ArrayList<StudentEntry> studentEntries;
+    private boolean registering = false;
+    private Handler handler;
+    private View view;
+    private Thread t;
+    String message;
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -33,8 +46,10 @@ public class RegistrationFragment extends Fragment {
         // Set title of the fragment to "Register Students".
         getActivity().setTitle("Register Students");
 
+        handler = new Handler();
+
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        view = inflater.inflate(R.layout.fragment_registration, container, false);
 
         // Populate list view with students.
         // This array would come from the database.
@@ -56,25 +71,53 @@ public class RegistrationFragment extends Fragment {
 
         final Button registerDevicesBtn = (Button) view.findViewById(R.id.registerDevicesBtn);
 
-
         registerDevicesBtn.setOnClickListener(new View.OnClickListener()
         {
-            boolean clicked = false;
 
             @Override
             public void onClick(View v)
             {
-                if (clicked) {
+                if (registering) {
                     registerDevicesBtn.setText("Register Devices");
-                    clicked = false;
+                    registering = false;
+                    t.interrupt();
                 } else {
                     registerDevicesBtn.setText("Stop Registering Devices");
-                    clicked = true;
+                    registering = true;
+                    t = new Thread() {
+
+                        TextView tv = view.findViewById(R.id.tvStudentName);
+                        @Override
+                        public void run() {
+                            try {
+
+                                while (!isInterrupted()) {
+                                    message = "Hello";
+
+                                    Thread.sleep(1000);
+                                    message = "World";
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            tv.setText(message);
+                                        }
+                                    });
+
+
+                                }
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    };
+
+                    t.start();
+
                 }
             }
         });
 
-        // Add the studentes from the ArrayList to the ListView.
+        // Add the students from the ArrayList to the ListView.
         populateListView(view, studentEntries);
 
         // Listen for a ListView entry selection.
@@ -99,15 +142,6 @@ public class RegistrationFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 StudentEntry entry = studentEntries.get(position);
 
-/*                Fragment fragment = new ClassFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("Student Entry", entry);
-                fragment.setArguments(bundle);
-
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.mainLayout, fragment);
-                ft.addToBackStack(null);
-                ft.commit();*/
             }
         });
     }
