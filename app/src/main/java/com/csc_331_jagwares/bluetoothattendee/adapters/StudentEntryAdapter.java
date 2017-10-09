@@ -20,6 +20,7 @@ public class StudentEntryAdapter extends ArrayAdapter {
 
     public StudentEntryAdapter(Context context, ArrayList<Student> studentEntries) {
         super(context, 0, studentEntries);
+        this.studentEntries = studentEntries;
     }
 
     @NonNull
@@ -38,9 +39,17 @@ public class StudentEntryAdapter extends ArrayAdapter {
         if (studentEntry != null) {
             tvStudentName.setText(studentEntry.getFullName());
             tvStudentId.setText(studentEntry.getId());
+            if (studentEntry.getMacAddress() != null) {
+                tvStudentDeviceRegistered.setText(studentEntry.getMacAddress());
+            }
         }
 
         return view;
     }
+
+    public ArrayList<Student> getData() {
+        return studentEntries;
+    }
+
 
 }

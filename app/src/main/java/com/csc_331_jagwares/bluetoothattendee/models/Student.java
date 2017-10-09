@@ -11,6 +11,7 @@ public class Student implements Parcelable {
     private String fullName;
     private String id;
     private String emailAddress;
+    private String macAddress;
 
     public Student(String id, String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;
@@ -18,6 +19,18 @@ public class Student implements Parcelable {
         this.fullName = this.firstName + " " + this.lastName;
         this.id = id;
         this.emailAddress = emailAddress;
+
+        this.macAddress = null;
+    }
+
+    public Student(String id, String firstName, String lastName, String emailAddress, String macAddress) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = this.firstName + " " + this.lastName;
+        this.id = id;
+        this.emailAddress = emailAddress;
+
+        this.macAddress = macAddress;
     }
 
     public String getFullName() {
@@ -32,12 +45,21 @@ public class Student implements Parcelable {
         return this.emailAddress;
     }
 
+    public String getMacAddress() {
+        return this.macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
     protected Student(Parcel in) {
         this.firstName = in.readString();
         this.lastName = in.readString();
         this.fullName = in.readString();
         this.id = in.readString();
         this.emailAddress = in.readString();
+        this.macAddress = in.readString();
     }
 
     @Override
@@ -47,6 +69,7 @@ public class Student implements Parcelable {
         dest.writeString(this.fullName);
         dest.writeString(this.id);
         dest.writeString(this.emailAddress);
+        dest.writeString(this.macAddress);
     }
 
     @Override

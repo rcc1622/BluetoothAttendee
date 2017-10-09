@@ -9,13 +9,16 @@
         android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0"
         android:stretchColumns="0,1"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignLeft="@+id/attendanceBtn"
+        android:layout_alignStart="@+id/attendanceBtn">
+
         <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tvClassName"
                 android:layout_width="0dp"
@@ -44,17 +47,19 @@
         </TableRow>
 
         <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tvClassTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_weight="1"
-                android:lines="1"
                 android:ellipsize="end"
+                android:lines="1"
                 android:text="" />
+
             <TextView
                 android:id="@+id/tvClassDays"
                 android:layout_width="0dp"
@@ -66,8 +71,9 @@
         </TableRow>
 
         <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tvClassLocation"
                 android:layout_width="0dp"
@@ -75,6 +81,7 @@
                 android:layout_column="0"
                 android:layout_weight="1"
                 android:text="" />
+
             <TextView
                 android:id="@+id/tvClassTime"
                 android:layout_width="0dp"
@@ -86,6 +93,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:id="@+id/tvClassProfName"
                 android:layout_width="fill_parent"
@@ -96,6 +104,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:id="@+id/tvClassNumStudents"
                 android:layout_width="fill_parent"
@@ -109,37 +118,44 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
         android:orientation="vertical" />
 
     <Button
         android:id="@+id/rosterBtn"
-        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/attendanceBtn"
-        android:layout_alignStart="@+id/attendanceBtn"
-        android:layout_alignTop="@+id/tableLayout"
-        android:layout_marginTop="146dp"
-        android:layout_gravity="center"
-        android:text="View Class Roster" />
+        android:layout_gravity="bottom"
+        android:text="View Class Roster"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="54dp"
+        android:layout_marginEnd="54dp"
+        android:layout_marginTop="69dp" />
 
     <Button
         android:id="@+id/attendanceBtn"
-        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/registerBtn"
-        android:layout_alignStart="@+id/registerBtn"
+        android:layout_gravity="bottom"
+        android:text="Take Attendance"
+        android:layout_marginTop="48dp"
         android:layout_below="@+id/rosterBtn"
-        android:layout_gravity="center"
-        android:text="Take Attendance" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp" />
 
     <Button
         android:id="@+id/registerBtn"
-        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/attendanceBtn"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
+        android:layout_gravity="bottom"
         android:text="Register Students" />
 
 </RelativeLayout>

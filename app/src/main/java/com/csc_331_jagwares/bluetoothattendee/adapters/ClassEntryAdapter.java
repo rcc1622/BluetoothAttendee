@@ -35,11 +35,9 @@ public class ClassEntryAdapter extends ArrayAdapter {
         // Set object values to the ListView layout elements.
         Class classEntry = (Class) getItem(position);
         TextView tvClassName = view.findViewById(R.id.tvClassName);
-        TextView tvClassTitle = view.findViewById(R.id.tvClassTitle);
 
         if (classEntry != null) {
-            tvClassName.setText(classEntry.getNumber() + "-" + classEntry.getSection());
-            tvClassTitle.setText(classEntry.getTitle());
+            tvClassName.setText(classEntry.getNumber() + "-" + classEntry.getSection() + " " + classEntry.getTitle());
         }
 
         return view;
