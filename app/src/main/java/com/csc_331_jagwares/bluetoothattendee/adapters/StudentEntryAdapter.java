@@ -1,4 +1,4 @@
-package com.csc_331_jagwares.bluetoothattendee;
+package com.csc_331_jagwares.bluetoothattendee.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,20 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.csc_331_jagwares.bluetoothattendee.R;
+import com.csc_331_jagwares.bluetoothattendee.models.Student;
 
-/**
- * Created by alex on 10/6/17.
- */
+import java.util.ArrayList;
 
 public class StudentEntryAdapter extends ArrayAdapter {
 
     // Holds the list of classes from the database to be added to the ListView.
-    private ArrayList<StudentEntry> studentEntries;
+    private ArrayList<Student> studentEntries;
 
-    public StudentEntryAdapter(Context context, ArrayList<StudentEntry> studentEntries) {
+    public StudentEntryAdapter(Context context, ArrayList<Student> studentEntries) {
         super(context, 0, studentEntries);
-        this.studentEntries = studentEntries;
     }
 
     @NonNull
@@ -32,20 +30,14 @@ public class StudentEntryAdapter extends ArrayAdapter {
         View view = inflater.inflate(R.layout.student_entry, null);
 
         // Set object values to the ListView layout elements.
-        StudentEntry studentEntry = (StudentEntry) getItem(position);
+        Student studentEntry = (Student) getItem(position);
         TextView tvStudentName = view.findViewById(R.id.tvStudentName);
         TextView tvStudentId = view.findViewById(R.id.tvStudentId);
         TextView tvStudentDeviceRegistered = view.findViewById(R.id.tvStudentDeviceRegistered);
 
         if (studentEntry != null) {
-            tvStudentName.setText(studentEntry.getName());
+            tvStudentName.setText(studentEntry.getFullName());
             tvStudentId.setText(studentEntry.getId());
-
-            if (studentEntry.getDeviceRegisteredDate() != null) {
-                tvStudentDeviceRegistered.setText("Device registered on "
-                                                    + studentEntry.getDeviceRegisteredDate()
-                                                    + ".");
-            }
         }
 
         return view;
