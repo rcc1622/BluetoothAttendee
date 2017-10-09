@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity
         // This would be retrieved from the database.
         instructor = new Instructor("Dr.", "Ryan", "Benton", "rbenton@southalabama.edu");
         // Add sample classes.
-        Class class1 = new Class("CSC 331", "102", "Software Engineering Principles");
-        Class class2 = new Class("CSC 320", "101", "Computer Organization and Architecture");
-        Class class3 = new Class("CSC 311", "103", "Networks and Communication");
-        Class class4 = new Class("CSC 120", "101", "Intro to Programming");
-        Class class5 = new Class("CSC 108", "102", "Intro to Computer Science");
+        Class class1 = new Class("CSC 331", "102", "Software Engineering Principles", "36561", "MWF" , "3:00PM-4:45PM", "Fall 2016", "SHEC 2222");
+        Class class2 = new Class("CSC 320", "101", "Computer Organization and Architecture", "5422", "MWF" , "4:00PM-4:50PM", "Fall 2016", "SHEC 2122");
+        Class class3 = new Class("CSC 311", "103", "Networks and Communication", "32654", "MWF" , "12:00PM-12:50PM", "Fall 2016", "SHEC 2232");
+        Class class4 = new Class("CSC 120", "101", "Intro to Programming", "84522", "TR" , "3:00PM-4:45PM", "Fall 2016", "SHEC 3222");
+        Class class5 = new Class("CSC 108", "102", "Intro to Computer Science", "3236", "TR" , "3:00PM-4:45PM", "Fall 2016", "SHEC 2222");
         Student student1 = new Student("J00589451", "Alex", "Dudenhoeffer", "aad1621@jagmail.southalabama.edu");
         Student student2 = new Student("J00345451", "Steven", "Mauseth", "swm1621@jagmail.southalabama.edu");
         Student student3 = new Student("J00589424", "Kaitlyn", "Gaiger", "kdg1621@jagmail.southalabama.edu");
