@@ -17,6 +17,7 @@ public class AttendeeDatasourceTest {
     @Before
     public void setUp() throws Exception {
         datasource = new AttendeeDatasource(InstrumentationRegistry.getTargetContext());
+        datasource.open();
     }
 
     @After

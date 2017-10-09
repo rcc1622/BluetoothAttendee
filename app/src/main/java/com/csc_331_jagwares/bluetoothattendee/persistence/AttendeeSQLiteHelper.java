@@ -45,12 +45,12 @@ public class AttendeeSQLiteHelper extends SQLiteOpenHelper {
     };
 
     // Table creation statements
-    private static final String SQL_PROLOG = "PRAGMA foreign_keys = ON";
+    private static final String SQL_PROLOG = "PRAGMA foreign_keys = ON;\n";
 
     private static final String TABLE_CLASS_CREATE =
             "CREATE TABLE " + TABLE_CLASS + "( "
             + COLUMN_CLASS_NAME + " TEXT PRIMARY KEY"
-            + "); "
+            + "); \n"
             ;
 
     private static final String TABLE_STUDENT_CREATE =
@@ -58,7 +58,7 @@ public class AttendeeSQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_JAGNUMBER + " TEXT PRIMARY KEY, "
             + COLUMN_FIRST_NAME + " TEXT,"
             + COLUMN_LAST_NAME + " TEXT"
-            + ");"
+            + "); \n"
             ;
 
     private static final String TABLE_ENROLLMENT_CREATE =
@@ -67,7 +67,7 @@ public class AttendeeSQLiteHelper extends SQLiteOpenHelper {
                 + TABLE_CLASS + "(" + COLUMN_CLASS_NAME + "), "
             + COLUMN_JAGNUMBER + " TEXT REFERENCES "
                 + TABLE_STUDENT + "(" + COLUMN_JAGNUMBER + ")"
-            + ");"
+            + "); \n"
             ;
 
     private static final String DATABASE_CREATE =
