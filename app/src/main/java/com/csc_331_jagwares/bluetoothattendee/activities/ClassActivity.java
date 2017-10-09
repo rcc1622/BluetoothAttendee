@@ -13,6 +13,7 @@ import com.csc_331_jagwares.bluetoothattendee.models.Class;
 public class ClassActivity extends AppCompatActivity {
 
     private Class classEntry;
+    private BluetoothAdapter mBluetoothAdapter;
     private static final int REQUEST_ENABLE_BT = 1;
 
     @Override
@@ -29,15 +30,9 @@ public class ClassActivity extends AppCompatActivity {
         }
 
         // Setup Bluetooth adapter.
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
-        } else {
-            // Request to enable Bluetooth if it is disabled.
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
         }
 
         // Open ClassFragment initially.
@@ -49,6 +44,11 @@ public class ClassActivity extends AppCompatActivity {
     public Class getClassEntry() {
         // This method is used to send a class to a fragment.
         return classEntry;
+    }
+
+    public BluetoothAdapter getBTAdapter() {
+        // This method is used to send a BluetoothAdapter to a fragment.
+        return mBluetoothAdapter;
     }
 
 }

@@ -4,6 +4,8 @@ package com.csc_331_jagwares.bluetoothattendee.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.csc_331_jagwares.bluetoothattendee.models.Student;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -19,7 +21,7 @@ public class Class implements Parcelable {
     private String location;
 
     private ArrayList<Student> students;
-
+  
     public Class(String number, String section, String title, String crn, String days, String time, String semester, String location) {
         this.number = number;
         this.section = section;
@@ -30,6 +32,14 @@ public class Class implements Parcelable {
         this.semester = semester;
         this.location = location;
         this.students = new ArrayList<>();
+    }
+
+    public Class(String number, String section, String title, ArrayList<Student> students) {
+        this.number = number;
+        this.section = section;
+        this.title = title;
+
+        this.students = students;
     }
 
     public String getNumber(){
@@ -85,7 +95,7 @@ public class Class implements Parcelable {
         this.students.add(studentEntry);
     }
 
-    protected Class(Parcel in) {
+    public Class(Parcel in) {
         this.number = in.readString();
         this.title = in.readString();
         this.section = in.readString();
@@ -94,7 +104,8 @@ public class Class implements Parcelable {
         this.time = in.readString();
         this.semester = in.readString();
         this.location = in.readString();
-        this.students = in.createTypedArrayList(Student.CREATOR);
+        students = new ArrayList<>(); //non-null reference is required
+        in.readTypedList(students, Student.CREATOR);
     }
 
     @Override
@@ -107,8 +118,7 @@ public class Class implements Parcelable {
         dest.writeString(this.time);
         dest.writeString(this.semester);
         dest.writeString(this.location);
-        dest.writeTypedList(this.students);
-
+        dest.writeTypedList(students);
     }
 
     @Override

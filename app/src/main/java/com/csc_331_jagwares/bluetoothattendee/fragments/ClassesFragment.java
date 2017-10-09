@@ -15,6 +15,7 @@ import com.csc_331_jagwares.bluetoothattendee.activities.ClassActivity;
 import com.csc_331_jagwares.bluetoothattendee.activities.MainActivity;
 import com.csc_331_jagwares.bluetoothattendee.adapters.ClassEntryAdapter;
 import com.csc_331_jagwares.bluetoothattendee.models.Class;
+import com.csc_331_jagwares.bluetoothattendee.models.Student;
 
 import java.util.ArrayList;
 
@@ -68,10 +69,12 @@ public class ClassesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Class classEntry = classes.get(position);
-
                 // Start a new ClassActivity based on the class selected.
                 Intent intent = new Intent(getActivity(), ClassActivity.class);
-                intent.putExtra("classEntry", classEntry);
+                Bundle bundle = new Bundle();
+                bundle.setClassLoader(Class.class.getClassLoader());
+                bundle.putParcelable("classEntry", classEntry);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
