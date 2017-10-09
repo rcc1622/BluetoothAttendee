@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.csc_331_jagwares.bluetoothattendee.R;
+import com.csc_331_jagwares.bluetoothattendee.adapters.StudentEntryAdapter;
 import com.csc_331_jagwares.bluetoothattendee.models.Class;
 import com.csc_331_jagwares.bluetoothattendee.models.Student;
 
@@ -18,8 +21,12 @@ import java.util.ArrayList;
  */
 public class ClassRosterFragment extends Fragment {
 
+    private View view;
+
     private Class classEntry;
     private ArrayList<Student> students;
+
+    StudentEntryAdapter adapter;
 
 
     public ClassRosterFragment() {
@@ -43,7 +50,34 @@ public class ClassRosterFragment extends Fragment {
         // Get ArrayList of students from the class.
         students = classEntry.getStudents();
 
+        // Add the students from the ArrayList to the ListView.
+        if (students != null) {
+            populateListView(view, students);
+        }
+
+        // Listen for a ListView entry selection.
+        registerClickCallback(view);
+
         return view;
+    }
+
+    private void populateListView(View view, ArrayList<Student> students) {
+        // Create the adapter to convert the array to views
+        adapter = new StudentEntryAdapter(getContext(), students);
+
+        // Attach the adapter to a ListView
+        ListView lvStudentList = view.findViewById(R.id.lvStudentList);
+        lvStudentList.setAdapter(adapter);
+    }
+
+    private void registerClickCallback(View view) {
+        ListView list = view.findViewById(R.id.lvStudentList);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Student studentEntry = students.get(position);
+            }
+        });
     }
 
 }

@@ -1,6 +1,7 @@
 package com.csc_331_jagwares.bluetoothattendee.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,10 @@ public class StudentEntryAdapter extends ArrayAdapter {
             tvStudentName.setText(studentEntry.getFullName());
             tvStudentId.setText(studentEntry.getId());
             if (studentEntry.getMacAddress() != null) {
-                tvStudentDeviceRegistered.setText(studentEntry.getMacAddress());
+                view.setBackgroundResource(R.color.colorRegistered);
+                tvStudentDeviceRegistered.setText("Device Registered: " + studentEntry.getMacAddress());
+            } else {
+                tvStudentDeviceRegistered.setText("Device not registered.");
             }
         }
 
