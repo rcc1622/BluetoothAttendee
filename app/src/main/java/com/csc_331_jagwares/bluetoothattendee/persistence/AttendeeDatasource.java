@@ -1,55 +1,60 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import com.csc_331_jagwares.bluetoothattendee.persistence.model.Class;
+
+
 import com.csc_331_jagwares.bluetoothattendee.persistence.model.Student;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Vector;
 
-/**
- * Wrapper for the SQLite database. Must be instantiated with
- * a context. open() must be called before any other method.
- *
- * TODO: Implement read methods.
- * TODO: Escape anything spliced into SQL.
- *       String foo = DatabaseUtils.sqlEscapeString(bar);
- * TODO: Add exists checks to all write methods. ???
- */
 public class AttendeeDatasource {
-    private SQLiteDatabase db;  // XXX Never initialized. Get this from helper.
-    private AttendeeSQLiteHelper dbHelper;
+    private File dbPath;
+    private SQLiteDatabase db;
 
-    /**
-     * Instantiate a data source in the given context.
-     *
-     * @param context
-     */
-    public AttendeeDatasource(Context context) {
-        dbHelper = new AttendeeSQLiteHelper(context);
+    public AttendeeDatasource(String dbPath) {
+        this.dbPath = new File(dbPath);
+    }
+
+    public void open() throws SQLException {
+        this.db = SQLiteDatabase.openDatabase(
+                dbPath.getPath(), null,
+                SQLiteDatabase.OPEN_READWRITE|SQLiteDatabase.CREATE_IF_NECESSARY);
     }
 
     /**
-     * Open the datasource. Must be called before any other methods.
+     * Drop any existing tables and recreate them. Must be called when
+     * opening the database for the first time.
+     *
      * @throws SQLException
      */
-    public void open() throws SQLException {
-        db = dbHelper.getWritableDatabase();
+    public void initializeDatabase() throws SQLException {
+        //db.execSQL("DELETE FROM SQLITE_MASTER");
+        db.execSQL("PRAGMA foreign_keys=ON");
+        db.execSQL("CREATE TABLE tblClass (className TEXT PRIMARY KEY)");
+        db.execSQL("CREATE TABLE tblStudent ( \n"
+            + "jagNumber TEXT PRIMARY KEY, "
+            + "firstName TEXT, \n"
+            + "lastname TEXT)"
+        );
+        db.execSQL("CREATE TABLE tblEnrollment ( \n"
+            + "jagNumber TEXT REFERENCES tblStudent(jagNumber), \n"
+            + "className TEXT REFERENCES tblClass(className))"
+        );
     }
 
     /**
      * Close the data source.
      */
     public void close() {
-        dbHelper.close();
+        db.close();
     }
-
 
     // Begin write methods.
     // ====================
@@ -58,13 +63,18 @@ public class AttendeeDatasource {
      * Create a new class with the given name.
      *
      * @param className
-     * @return long
+     * @return void
      */
-    public long addClass(String className) {
-        // TODO: Do an exists check first.
-        ContentValues row = new ContentValues();
-        row.put(dbHelper.COLUMN_CLASS_NAME, className);
-        return db.insert(dbHelper.TABLE_CLASS, null, row);
+    public void addClass(String className) {
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO tblClass(className) VALUES (?)",
+                    new String[]{className}
+            );
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /**
@@ -73,15 +83,20 @@ public class AttendeeDatasource {
      * @param jagNumber
      * @param firstName
      * @param lastName
-     * @return
+     * @return void
      */
-    public long addStudent(String jagNumber, String firstName, String lastName) {
-        // TODO: Do an exists check first.
-        ContentValues row = new ContentValues();
-        row.put(dbHelper.COLUMN_JAGNUMBER, jagNumber);
-        row.put(dbHelper.COLUMN_FIRST_NAME, firstName);
-        row.put(dbHelper.COLUMN_LAST_NAME, lastName);
-        return db.insert(dbHelper.TABLE_STUDENT, null, row);
+    public void addStudent(String jagNumber, String firstName, String lastName) {
+        db.beginTransaction();
+        try {
+            db.execSQL(
+                    "INSERT INTO tblStudent (jagNumber, firstName, lastName) "
+                            + "VALUES (?, ?, ?)",
+                    new String[]{jagNumber, firstName, lastName}
+            );
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /**
@@ -91,54 +106,121 @@ public class AttendeeDatasource {
      * @param className
      * @return
      */
-    public long enrollStudent(String jagNumber, String className) {
-        // TODO: Do an exists check first.
-        ContentValues row = new ContentValues();
-        row.put(dbHelper.COLUMN_JAGNUMBER, jagNumber);
-        row.put(dbHelper.COLUMN_CLASS_NAME, className);
-        return db.insert(dbHelper.TABLE_ENROLLMENT, null, row);
+    public void enrollStudent(String jagNumber, String className) {
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO tblEnrollment(jagNumber, className) "
+                            + "VALUES (?, ?)",
+                    new String[]{jagNumber, className}
+            );
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
+
     // =================
     // End write methods
 
     // Begin read methods
     // ==================
+
     /**
+     * Return class with the given name, else null;
      *
-     * @return Vector<Class>
+     * @param className
+     * @return Class
      */
+    public Class getClassByName(String className) {
+        Cursor c = db.rawQuery("SELECT className FROM tblClass WHERE className = ?",
+                new String[]{className}
+        );
+        if (c.moveToNext()) {
+            return new Class(this, c.getString(0));
+        } else {
+            return null;
+        }
+    }
+
     public ArrayList<Class> getAllClasses() {
-        String[] columns = {dbHelper.COLUMN_CLASS_NAME};
         Cursor c = db.rawQuery("SELECT * FROM tblClass;", null);
         ArrayList<Class> results = new ArrayList<Class>();
-        while (!c.isAfterLast()) {
+        while (c.moveToNext()) {
             results.add(new Class(this, c.getString(0)));
         }
         return results;
     }
 
-    private String UNREGISTERED_STUDENTS_QUERY =
-            "SELECT * FROM ( \n"
-                    + "SELECT tblStudent.jagNumber, tblStudent.firstName, \n"
-                    + "tblStudent.lastName, tblEnrollment.className \n"
-                    + "FROM tblStudent LEFT JOIN tblEnrollment \n"
-                    + "ON tblStudent.jagNumber = tblEnrollment.jagNumber \n"
-                    +") \n"
-                    + "WHERE className IS NULL";
-
-    public ArrayList<Student> getUnregisteredStudents() {
-        ArrayList<Student> students = new ArrayList<Student>();
-        Cursor c = db.rawQuery(UNREGISTERED_STUDENTS_QUERY, null);
-        while (!c.isAfterLast()) {
-            students.add(new Student(this, c.getString(0),
-                    c.getString(1), c.getString(2)));
+    /**
+     * Return student with given Jag number, else null.
+     *
+     * @param jagNumber
+     * @return
+     */
+    public Student getStudentByJagNumber(String jagNumber) {
+        Cursor c = db.rawQuery("SELECT * FROM tblStudent WHERE jagNumber = ?",
+                new String[]{jagNumber});
+        if (c.moveToNext()) {
+            return new Student(this, c.getString(0), c.getString(1), c.getString(2));
         }
-        return students;
+        return null;
     }
 
+//    private String UNREGISTERED_STUDENTS_QUERY =
+//            "SELECT * FROM ( \n"
+//                    + "SELECT tblStudent.jagNumber, tblStudent.firstName, \n"
+//                    + "tblStudent.lastName, tblEnrollment.className \n"
+//                    + "FROM tblStudent LEFT JOIN tblEnrollment \n"
+//                    + "ON tblStudent.jagNumber = tblEnrollment.jagNumber \n"
+//                    +") \n"
+//                    + "WHERE className IS NULL";
+//
+//    public ArrayList<Student> getUnregisteredStudents() {
+//        ArrayList<Student> students = new ArrayList<Student>();
+//        Cursor c = db.rawQuery(UNREGISTERED_STUDENTS_QUERY, null);
+//        while (!c.isAfterLast()) {
+//            students.add(new Student(this, c.getString(0),
+//                    c.getString(1), c.getString(2)));
+//        }
+//        return students;
+//    }
 
-    private boolean cursorIsEmpty(Cursor cursor) {
-        return cursor.moveToFirst();
+//    String STUDENTS_IN_CLASS_QUERY =
+//            "SELECT tblStudent.jagNumber, tblStudent.firstName, tblStudent.lastName \n"
+//            + "FROM tblStudent \n"
+//            + "JOIN (tblEnrollment JOIN tblClass \n"
+//                   + "ON tblEnrollment.className = tblClass.className) \n"
+//            + "ON tblStudent.jagNumber = tblEnrollment.jagNumber \n"
+//            + "WHERE tblClass.className = ? ";
+//
+//    public ArrayList<Student> getStudentsInClass(String className) {
+//        Cursor c = db.rawQuery(STUDENTS_IN_CLASS_QUERY,
+//                new String[]{DatabaseUtils.sqlEscapeString(className)});
+//        ArrayList<Student> students = new ArrayList<>();
+//        while (c.moveToNext()) {
+//            students.add(new Student(
+//                    this,
+//                    DatabaseUtils.sqlEscapeString(c.getString(0)),
+//                    DatabaseUtils.sqlEscapeString(c.getString(1)),
+//                    DatabaseUtils.sqlEscapeString(c.getString(2)))
+//            );
+//        }
+//        return students;
+//    }
+
+    /**
+     * Return true if student is enrolled in class.
+     *
+     * @param jagNumber
+     * @param className
+     * @return boolean
+     */
+    public boolean studentInClass(String jagNumber, String className) {
+        Cursor c = db.rawQuery("SELECT * FROM tblEnrollment WHERE "
+                        + "jagNumber = ? and className = ?",
+                new String[]{jagNumber, className}
+        );
+        return c.moveToFirst();
     }
 
     // Begin existence checks
@@ -155,7 +237,7 @@ public class AttendeeDatasource {
                 "SELECT * FROM tblStudent WHERE jagNumber = ?",
                 new String[]{jagNumber}
         );
-        return !cursorIsEmpty(c);
+        return c.moveToFirst(); //Returns false if cursor empty.
     }
 
     /**
@@ -169,18 +251,6 @@ public class AttendeeDatasource {
                 "SELECT * FROM tblClass WHERE className = ?",
                 new String[]{className}
         );
-        return !cursorIsEmpty(c);
-    }
-
-    /**
-     * Return true if student is enrolled in class.
-     *
-     * @param jagNumber
-     * @param className
-     * @return boolean
-     */
-    public boolean studentInClass(String jagNumber, String className) {
-        Cursor c = db.rawQuery("SELECT * FROM tblEnrollment", null);
-        return !cursorIsEmpty(c);
+        return c.moveToFirst();
     }
 }
