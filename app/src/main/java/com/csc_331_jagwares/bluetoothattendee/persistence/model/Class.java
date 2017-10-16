@@ -33,4 +33,7 @@ public class Class extends Model {
 //        // TODO: This must be dynamic.
 //    }
 
+    public ArrayList<Student> getStudents() {
+        return datasource.getStudentsInClass(className);
+    }
 }

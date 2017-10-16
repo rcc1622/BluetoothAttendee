@@ -184,29 +184,37 @@ public class AttendeeDatasource {
 //        }
 //        return students;
 //    }
+    /**
+     * SELECT tblStudent.jagNumber, tblStudent.firstName, tblStudent.lastName
+     * FROM
+     * tblClass
+     * JOIN tblEnrollment ON tblClass.className = tblEnrollment.className
+     * JOIN tblStudent ON tblEnrollment.jagNumber = tblStudent.jagNumber
+     * WHERE tblClass.className = ?
+     * ;
+     */
+    String STUDENTS_IN_CLASS_QUERY =
+            "SELECT s.jagNumber, s.firstName, s.lastName \n"
+            + "FROM tblClass c \n"
+            + "JOIN tblEnrollment e ON c.className = e.className \n"
+            + "JOIN tblStudent s ON e.jagNumber = s.jagNumber \n"
+            + "WHERE c.className = ? \n"
+            ;
 
-//    String STUDENTS_IN_CLASS_QUERY =
-//            "SELECT tblStudent.jagNumber, tblStudent.firstName, tblStudent.lastName \n"
-//            + "FROM tblStudent \n"
-//            + "JOIN (tblEnrollment JOIN tblClass \n"
-//                   + "ON tblEnrollment.className = tblClass.className) \n"
-//            + "ON tblStudent.jagNumber = tblEnrollment.jagNumber \n"
-//            + "WHERE tblClass.className = ? ";
-//
-//    public ArrayList<Student> getStudentsInClass(String className) {
-//        Cursor c = db.rawQuery(STUDENTS_IN_CLASS_QUERY,
-//                new String[]{DatabaseUtils.sqlEscapeString(className)});
-//        ArrayList<Student> students = new ArrayList<>();
-//        while (c.moveToNext()) {
-//            students.add(new Student(
-//                    this,
-//                    DatabaseUtils.sqlEscapeString(c.getString(0)),
-//                    DatabaseUtils.sqlEscapeString(c.getString(1)),
-//                    DatabaseUtils.sqlEscapeString(c.getString(2)))
-//            );
-//        }
-//        return students;
-//    }
+    public ArrayList<Student> getStudentsInClass(String className) {
+        Cursor c = db.rawQuery(STUDENTS_IN_CLASS_QUERY,
+                new String[]{className});
+        ArrayList<Student> students = new ArrayList<>();
+        while (c.moveToNext()) {
+            students.add(new Student(
+                    this,
+                    c.getString(0),
+                    c.getString(1),
+                    c.getString(2))
+            );
+        }
+        return students;
+    }
 
     /**
      * Return true if student is enrolled in class.

@@ -88,10 +88,17 @@ public class AttendeeDatasourceTest {
         assertTrue(student.getFirstName().equals("Willy"));
     }
 
-
     @Test
     public void testStudentInClass() throws Exception {
         assertTrue(datasource.studentInClass("J99999999", "Underwater Basket Weaving"));
         assertFalse(datasource.studentInClass("J88888888", "Underwater Basket Weaving"));
+    }
+
+    @Test
+    public void testGetStudentsInClass() {
+        Class cls = datasource.getClassByName("Underwater Basket Weaving");
+        ArrayList<Student> students = cls.getStudents();
+        assertTrue(students.size() == 1);
+        assertTrue(students.get(0).getFirstName().equals("Jimmy"));
     }
 }
