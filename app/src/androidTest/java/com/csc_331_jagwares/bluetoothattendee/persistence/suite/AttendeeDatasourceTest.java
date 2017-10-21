@@ -2,6 +2,7 @@ package com.csc_331_jagwares.bluetoothattendee.persistence.suite;
 
 //import android.support.test.filters.SmallTest;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
@@ -38,22 +39,55 @@ public class AttendeeDatasourceTest {
         datasource = new AttendeeDatasource(dbFile.getPath());
         datasource.open();
         datasource.initializeDatabase();
-        datasource.insertClass("Underwater Basket Weaving");
-        datasource.insertClass("Calculus");
-        datasource.insertClass("Pigonometry");
-        datasource.insertStudent(
+        // Create classes.
+        Class ubw = new Class(datasource, "Underwater Basket Weaving");
+        ubw.save();
+        Class calculus = new Class(datasource, "Calculus");
+        calculus.save();
+        Class pigonometry = new Class(datasource, "Pigonometry");
+        pigonometry.save();
+        // Calling save more than once is wasteful, but has no
+        // visible effect.
+        pigonometry.save();
+
+        // Create students.
+        Student jimmy = new Student(datasource,
                 "J99999999", "Jimmy", "James",
                 "jimmyjames@foo.bar", "00-14-22-01-23-45"
                 );
-        datasource.insertStudent(
+        jimmy.save();
+        Student willy = new Student(datasource,
                 "J88888888", "Willy", "Wonka",
                 "willywonka@foo.bar", "00-14-22-01-23-46");
-        datasource.enrollStudent("J99999999", "Underwater Basket Weaving");
+        willy.save();
+        // Hobbits don't go to school.
+        Student frodo = new Student(datasource,
+                "JOOGGGGGG", "Frodo", "Baggins",
+                null, null);
+        frodo.save();
+
+        // Class.addStudent() and Student.enroll() are different
+        // ways of doing the same thing.
+        // You don't have to call save() after these.
+        ubw.addStudent(jimmy);
+        willy.enroll(ubw);
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         datasource.close();
+    }
+
+    /*
+    You cannot enroll a student in a class unless BOTH exist in the
+    database. That means you have to have initially read them
+    from the datasource or called save() after instantiating them.
+     */
+    @Test(expected = SQLiteConstraintException.class)
+    public void enrollInUnsavedClass() throws Exception {
+        Student jimmy = datasource.getStudentByJagNumber("J99999999");
+        Class unsaved = new Class(datasource, "Oops.");
+        jimmy.enroll(unsaved);
     }
 
     /*
@@ -91,14 +125,15 @@ public class AttendeeDatasourceTest {
     @Test
     public void testStudentInClass() throws Exception {
         assertTrue(datasource.studentInClass("J99999999", "Underwater Basket Weaving"));
-        assertFalse(datasource.studentInClass("J88888888", "Underwater Basket Weaving"));
+        assertTrue(datasource.studentInClass("J88888888", "Underwater Basket Weaving"));
+        assertFalse(datasource.studentInClass("JOOGGGGGG", "Underwater Basket Weaving"));
     }
 
     @Test
     public void testGetStudentsInClass() {
         Class cls = datasource.getClassByName("Underwater Basket Weaving");
         ArrayList<Student> students = cls.getStudents();
-        assertTrue(students.size() == 1);
+        assertTrue(students.size() == 2);
         assertTrue(students.get(0).getFirstName().equals("Jimmy"));
     }
 
