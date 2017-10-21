@@ -1,10 +1,9 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence;
 
+import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import com.csc_331_jagwares.bluetoothattendee.persistence.model.Class;
 
@@ -17,6 +16,11 @@ import java.util.ArrayList;
 public class AttendeeDatasource {
     private File dbPath;
     private SQLiteDatabase db;
+
+    private String STUDENT_COLUMNS_STRING =
+            "jagNumber, firstName, lastName, emailAddress, macAddress";
+
+    private String CLASS_COLUMNS_STRING = "className";
 
     public AttendeeDatasource(String dbPath) {
         this.dbPath = new File(dbPath);
@@ -41,7 +45,10 @@ public class AttendeeDatasource {
         db.execSQL("CREATE TABLE tblStudent ( \n"
             + "jagNumber TEXT PRIMARY KEY, "
             + "firstName TEXT, \n"
-            + "lastname TEXT)"
+            + "lastName TEXT, \n"
+            + "emailAddress TEXT, \n"
+            + "macAddress TEXT \n"
+            + ");"
         );
         db.execSQL("CREATE TABLE tblEnrollment ( \n"
             + "jagNumber TEXT REFERENCES tblStudent(jagNumber), \n"
@@ -60,17 +67,21 @@ public class AttendeeDatasource {
     // ====================
 
     /**
-     * Create a new class with the given name.
+     * Create or update a class with the given className.
      *
      * @param className
      * @return void
      */
-    public void addClass(String className) {
+    public void insertClass(String className) {
+        ContentValues row = new ContentValues();
+        row.put("className", className);
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO tblClass(className) VALUES (?)",
-                    new String[]{className}
-            );
+            db.insertWithOnConflict("tblClass", null, row,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+//            db.execSQL("INSERT INTO tblClass(className) VALUES (?)",
+//                    new String[]{className}
+//            );
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -78,21 +89,35 @@ public class AttendeeDatasource {
     }
 
     /**
-     * Create a new student with the given attributes.
+     * Create or update student with given jagNumber.
      *
      * @param jagNumber
      * @param firstName
      * @param lastName
      * @return void
      */
-    public void addStudent(String jagNumber, String firstName, String lastName) {
+    public void insertStudent(String jagNumber, String firstName, String lastName,
+                              String emailAddress, String macAddress) {
+        // Todo: Models should be subclasses of ContentValues
+        // so they can be passed directly to these methods.
+        ContentValues row = new ContentValues();
+        row.put("jagNumber", jagNumber);
+        row.put("firstName", firstName);
+        row.put("lastName", lastName);
+        row.put("emailAddress", emailAddress);
+        row.put("macAddress", macAddress);
         db.beginTransaction();
         try {
-            db.execSQL(
-                    "INSERT INTO tblStudent (jagNumber, firstName, lastName) "
-                            + "VALUES (?, ?, ?)",
-                    new String[]{jagNumber, firstName, lastName}
-            );
+            db.insertWithOnConflict("tblStudent", null, row,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+//            db.execSQL(
+//                    "INSERT INTO tblStudent ( \n"
+//                            + STUDENT_COLUMNS_STRING
+//                            + ") \n"
+//                            + "VALUES (?, ?, ?, ?, ?)",
+//                    new String[]{jagNumber, firstName, lastName,
+//                    emailAddress, macAddress}
+//            );
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -151,50 +176,35 @@ public class AttendeeDatasource {
         return results;
     }
 
+    // Short for c.getString(c.getColumnIndex(colName));
+    private String __(Cursor c, String fieldName) {
+        return c.getString(c.getColumnIndex(fieldName));
+    }
+
     /**
      * Return student with given Jag number, else null.
      *
      * @param jagNumber
      * @return
      */
+    /// TODO: use explicit field selection.
     public Student getStudentByJagNumber(String jagNumber) {
-        Cursor c = db.rawQuery("SELECT * FROM tblStudent WHERE jagNumber = ?",
+        Cursor c = db.rawQuery("SELECT " + STUDENT_COLUMNS_STRING + " FROM tblStudent WHERE jagNumber = ?",
                 new String[]{jagNumber});
         if (c.moveToNext()) {
-            return new Student(this, c.getString(0), c.getString(1), c.getString(2));
+            return new Student(this,
+                    __(c, "jagNumber"),
+                    __(c, "firstName"),
+                    __(c, "lastName"),
+                    __(c, "emailAddress"),
+                    __(c, "macAddress")
+            );
         }
         return null;
     }
 
-//    private String UNREGISTERED_STUDENTS_QUERY =
-//            "SELECT * FROM ( \n"
-//                    + "SELECT tblStudent.jagNumber, tblStudent.firstName, \n"
-//                    + "tblStudent.lastName, tblEnrollment.className \n"
-//                    + "FROM tblStudent LEFT JOIN tblEnrollment \n"
-//                    + "ON tblStudent.jagNumber = tblEnrollment.jagNumber \n"
-//                    +") \n"
-//                    + "WHERE className IS NULL";
-//
-//    public ArrayList<Student> getUnregisteredStudents() {
-//        ArrayList<Student> students = new ArrayList<Student>();
-//        Cursor c = db.rawQuery(UNREGISTERED_STUDENTS_QUERY, null);
-//        while (!c.isAfterLast()) {
-//            students.add(new Student(this, c.getString(0),
-//                    c.getString(1), c.getString(2)));
-//        }
-//        return students;
-//    }
-    /**
-     * SELECT tblStudent.jagNumber, tblStudent.firstName, tblStudent.lastName
-     * FROM
-     * tblClass
-     * JOIN tblEnrollment ON tblClass.className = tblEnrollment.className
-     * JOIN tblStudent ON tblEnrollment.jagNumber = tblStudent.jagNumber
-     * WHERE tblClass.className = ?
-     * ;
-     */
     String STUDENTS_IN_CLASS_QUERY =
-            "SELECT s.jagNumber, s.firstName, s.lastName \n"
+            "SELECT s.jagNumber, s.firstName, s.lastName, s.emailAddress, s.macAddress \n"
             + "FROM tblClass c \n"
             + "JOIN tblEnrollment e ON c.className = e.className \n"
             + "JOIN tblStudent s ON e.jagNumber = s.jagNumber \n"
@@ -208,9 +218,11 @@ public class AttendeeDatasource {
         while (c.moveToNext()) {
             students.add(new Student(
                     this,
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2))
+                    __(c, "jagNumber"),
+                    __(c, "firstName"),
+                    __(c, "lastName"),
+                    __(c, "emailAddress"),
+                    __(c, "macAddress"))
             );
         }
         return students;

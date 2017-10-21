@@ -12,16 +12,11 @@ import com.csc_331_jagwares.bluetoothattendee.persistence
 import com.csc_331_jagwares.bluetoothattendee.persistence.model.Class;
 import com.csc_331_jagwares.bluetoothattendee.persistence.model.Student;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.*;
 
@@ -43,11 +38,16 @@ public class AttendeeDatasourceTest {
         datasource = new AttendeeDatasource(dbFile.getPath());
         datasource.open();
         datasource.initializeDatabase();
-        datasource.addClass("Underwater Basket Weaving");
-        datasource.addClass("Calculus");
-        datasource.addClass("Pigonometry");
-        datasource.addStudent("J99999999", "Jimmy", "James");
-        datasource.addStudent("J88888888", "Willy", "Wonka");
+        datasource.insertClass("Underwater Basket Weaving");
+        datasource.insertClass("Calculus");
+        datasource.insertClass("Pigonometry");
+        datasource.insertStudent(
+                "J99999999", "Jimmy", "James",
+                "jimmyjames@foo.bar", "00-14-22-01-23-45"
+                );
+        datasource.insertStudent(
+                "J88888888", "Willy", "Wonka",
+                "willywonka@foo.bar", "00-14-22-01-23-46");
         datasource.enrollStudent("J99999999", "Underwater Basket Weaving");
     }
 
@@ -100,5 +100,15 @@ public class AttendeeDatasourceTest {
         ArrayList<Student> students = cls.getStudents();
         assertTrue(students.size() == 1);
         assertTrue(students.get(0).getFirstName().equals("Jimmy"));
+    }
+
+    @Test
+    public void testSaveStudent() {
+        Student jimmy = datasource.getStudentByJagNumber("J99999999");
+        assertNotNull(jimmy);
+        jimmy.setLastName("Jack");
+        jimmy.save();
+        jimmy = datasource.getStudentByJagNumber("J99999999");
+        assertTrue(jimmy.getLastName().equals("Jack"));
     }
 }
