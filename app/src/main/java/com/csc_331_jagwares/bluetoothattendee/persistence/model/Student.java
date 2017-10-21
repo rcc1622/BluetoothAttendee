@@ -1,5 +1,6 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence.model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -7,14 +8,6 @@ import com.csc_331_jagwares.bluetoothattendee.persistence
         .AttendeeDatasource;
 
 /**
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * TODO: Models should inherit from ContentValues.
- * This will allow them to be passed to certain
- * database methods that use ContentValues to
- * repesent rows destined for insertion. Simplifies
- * packing and unpacking Student attributes between
- * reads/writes.
- *
  * Created by steven on 10/3/2017.
  */
 
@@ -27,6 +20,16 @@ public class Student extends Model {
     private String macAddress;
 
     /**
+     * Create a new student. The new instance will not be
+     * saved to the database until .save() is called.
+     *
+     * To modify the instance, call the relevant setter method(s),
+     * then call save(). jagNumber is read-only.
+     *
+     * To enroll the student in a class, call enroll(). This
+     * takes effect immediately; save() is unnecessary.
+     * NOTE: enroll() will fail when called when called with a new
+     * student or class that has not been saved.
      *
      * @param datasource
      * @param jagNumber
@@ -45,12 +48,18 @@ public class Student extends Model {
         this.macAddress = macAddress;
     }
 
-    public String getJagNumber() {
-        return jagNumber;
+    public ContentValues toContentValues() {
+        ContentValues row = new ContentValues();
+        row.put("jagNumber", jagNumber);
+        row.put("firstName", firstName);
+        row.put("lastName", lastName);
+        row.put("emailAddress", emailAddress);
+        row.put("macAddress", macAddress);
+        return row;
     }
 
-    public void setJagNumber(String jagNumber) {
-        this.jagNumber = jagNumber;
+    public String getJagNumber() {
+        return jagNumber;
     }
 
     public String getFirstName() {
@@ -85,13 +94,14 @@ public class Student extends Model {
         this.macAddress = macAddress;
     }
 
-
+    public void enroll(Class cls) {
+        datasource.enrollStudent(this, cls);
+    }
+    /**
+     * Save new objects, or save changes made by setter methods.
+     * Not needed after calling Student.enroll(Class).
+     */
     public void save() {
-        datasource.insertStudent(
-                jagNumber,
-                firstName,
-                lastName,
-                emailAddress,
-                macAddress);
+        datasource.insertStudent(this);
     }
 }

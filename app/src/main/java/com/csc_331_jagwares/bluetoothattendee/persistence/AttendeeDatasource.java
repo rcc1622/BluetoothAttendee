@@ -69,15 +69,14 @@ public class AttendeeDatasource {
     /**
      * Create or update a class with the given className.
      *
-     * @param className
+     * @param cls
      * @return void
      */
-    public void insertClass(String className) {
-        ContentValues row = new ContentValues();
-        row.put("className", className);
+    public void insertClass(Class cls) {
         db.beginTransaction();
         try {
-            db.insertWithOnConflict("tblClass", null, row,
+            db.insertWithOnConflict("tblClass", null,
+                    cls.toContentValues(),
                     SQLiteDatabase.CONFLICT_REPLACE);
 //            db.execSQL("INSERT INTO tblClass(className) VALUES (?)",
 //                    new String[]{className}
@@ -91,24 +90,16 @@ public class AttendeeDatasource {
     /**
      * Create or update student with given jagNumber.
      *
-     * @param jagNumber
-     * @param firstName
-     * @param lastName
+     * @param student
      * @return void
      */
-    public void insertStudent(String jagNumber, String firstName, String lastName,
-                              String emailAddress, String macAddress) {
-        // Todo: Models should be subclasses of ContentValues
-        // so they can be passed directly to these methods.
-        ContentValues row = new ContentValues();
-        row.put("jagNumber", jagNumber);
-        row.put("firstName", firstName);
-        row.put("lastName", lastName);
-        row.put("emailAddress", emailAddress);
-        row.put("macAddress", macAddress);
+//    public void insertStudent(String jagNumber, String firstName, String lastName,
+//                              String emailAddress, String macAddress) {
+    public void insertStudent(Student student) {
         db.beginTransaction();
         try {
-            db.insertWithOnConflict("tblStudent", null, row,
+            db.insertWithOnConflict("tblStudent", null,
+                    student.toContentValues(),
                     SQLiteDatabase.CONFLICT_REPLACE);
 //            db.execSQL(
 //                    "INSERT INTO tblStudent ( \n"
@@ -127,16 +118,16 @@ public class AttendeeDatasource {
     /**
      * Add student with a given Jag Number to the class.
      *
-     * @param jagNumber
-     * @param className
-     * @return
+     * @param student
+     * @param cls
      */
-    public void enrollStudent(String jagNumber, String className) {
+    public void enrollStudent(Student student, Class cls) {
+//    public void enrollStudent(String jagNumber, String className) {
         db.beginTransaction();
         try {
             db.execSQL("INSERT INTO tblEnrollment(jagNumber, className) "
                             + "VALUES (?, ?)",
-                    new String[]{jagNumber, className}
+                    new String[]{student.getJagNumber(), cls.getClassName()}
             );
             db.setTransactionSuccessful();
         } finally {
