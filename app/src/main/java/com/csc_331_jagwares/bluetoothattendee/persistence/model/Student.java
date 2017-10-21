@@ -1,5 +1,7 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.csc_331_jagwares.bluetoothattendee.persistence
@@ -14,26 +16,50 @@ public class Student extends Model {
     private String jagNumber;
     private String firstName;
     private String lastName;
+    private String emailAddress;
+    private String macAddress;
 
     /**
+     * Create a new student. The new instance will not be
+     * saved to the database until .save() is called.
+     *
+     * To modify the instance, call the relevant setter method(s),
+     * then call save(). jagNumber is read-only.
+     *
+     * To enroll the student in a class, call enroll(). This
+     * takes effect immediately; save() is unnecessary.
+     * NOTE: enroll() will fail when called when called with a new
+     * student or class that has not been saved.
+     *
      * @param datasource
      * @param jagNumber
      * @param firstName
      * @param lastName
+     * @param emailAddress
+     * @param macAddress
      */
-    public Student (AttendeeDatasource datasource, String jagNumber, String firstName, String lastName) {
+    public Student (AttendeeDatasource datasource, String jagNumber, String firstName, String lastName,
+                    String emailAddress, String macAddress) {
         super(datasource);
         this.jagNumber = jagNumber;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.emailAddress = emailAddress;
+        this.macAddress = macAddress;
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues row = new ContentValues();
+        row.put("jagNumber", jagNumber);
+        row.put("firstName", firstName);
+        row.put("lastName", lastName);
+        row.put("emailAddress", emailAddress);
+        row.put("macAddress", macAddress);
+        return row;
     }
 
     public String getJagNumber() {
         return jagNumber;
-    }
-
-    public void setJagNumber(String jagNumber) {
-        // TODO: dynamic
     }
 
     public String getFirstName() {
@@ -41,7 +67,7 @@ public class Student extends Model {
     }
 
     public void setFirstName(String firstName) {
-        // TODO: dynamic
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -52,9 +78,30 @@ public class Student extends Model {
         this.lastName = lastName;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
+    public void enroll(Class cls) {
+        datasource.enrollStudent(this, cls);
+    }
+    /**
+     * Save new objects, or save changes made by setter methods.
+     * Not needed after calling Student.enroll(Class).
+     */
     public void save() {
-        /**
-         * TODO
-         */
+        datasource.insertStudent(this);
     }
 }

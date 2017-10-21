@@ -1,5 +1,6 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence.model;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.csc_331_jagwares.bluetoothattendee.persistence
@@ -16,4 +17,8 @@ abstract public class Model {
     public Model(AttendeeDatasource datasource) {
         this.datasource = datasource;
     }
+
+    abstract public void save();
+
+    abstract public ContentValues toContentValues();
 }

@@ -1,5 +1,6 @@
 package com.csc_331_jagwares.bluetoothattendee.persistence.model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -25,6 +26,12 @@ public class Class extends Model {
         this.className = className;
     }
 
+    public ContentValues toContentValues() {
+        ContentValues row = new ContentValues();
+        row.put("className", className);
+        return row;
+    }
+
     public String getClassName() {
         return className;
     }
@@ -35,5 +42,16 @@ public class Class extends Model {
 
     public ArrayList<Student> getStudents() {
         return datasource.getStudentsInClass(className);
+    }
+
+    public void addStudent(Student student) {
+        datasource.enrollStudent(student, this);
+    }
+    /**
+     * Save new objects, or save changes made by setter methods.
+     * Not needed after calling Student.enroll(Class).
+     */
+    public void save() {
+        datasource.insertClass(this);
     }
 }
